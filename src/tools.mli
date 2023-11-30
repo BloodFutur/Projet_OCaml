@@ -8,3 +8,8 @@ val gmap: 'a graph -> ('a -> 'b) -> 'b graph
 
 (* Add n to the value fo the arc betwen id1 and id2. If the arc does not exist, it is created*)
 val add_arc: int graph -> id -> id -> int -> int graph
+
+val print_list: int list -> unit 
+
+(* Return list of all paths from s to t, depth-first search *)
+val path_dfs: int graph -> id list -> id list -> id -> id -> id list
