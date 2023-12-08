@@ -1,5 +1,7 @@
 open Graph
 
+type path = id list
+
 (* Return a new graph having the same nodes than gr, but not arc*)
 val clone_nodes: 'a graph -> 'b graph
 
@@ -12,4 +14,6 @@ val add_arc: int graph -> id -> id -> int -> int graph
 val print_list: int list -> unit 
 
 (* Return list of all paths from s to t, depth-first search *)
-val path_dfs: int graph -> id list -> id list -> id -> id -> id list
+val find_path: int graph -> id list -> id -> id -> path option
+
+val  min_flow: int graph -> int -> path -> int 

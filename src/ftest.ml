@@ -1,5 +1,6 @@
 open Gfile
 open Tools
+
     
 let () =
 
@@ -38,8 +39,11 @@ let () =
   (* Test 3: to test with graph1 *)
   let test3 = gmap (add_arc (gmap graph int_of_string) 1 3 69) string_of_int in
 
-
-  print_list (path_dfs (gmap graph int_of_string) [] [] 0 5);
+  let path_found = find_path (gmap graph int_of_string) [] 0 1 in
+  match path_found with 
+  |Some a -> print_list a; Printf.printf "%d" (min_flow (gmap graph int_of_string) max_int a)
+  |None -> Printf.printf "non";
+ 
 
   (* Rewrite the graph that has been read. *)
   let () = export outfile test3 in
