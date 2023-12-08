@@ -18,14 +18,14 @@ let rec print_list = function
 
 let rec path_dfs (gr: 'a graph) (visited: id list) (acc: id list) (s: id) (t: id) =
   if s=t then 
-    s::acc
+    List.rev(s::acc)
  (* else List.map (fun a->  (path_dfs gr (List.append visited [s]) ((a.src)::acc) a.tgt t) else acc) (out_arcs gr s) *)
   else
     let rec loop = function
      |[]->[]
-     |a::rest -> if not (List.mem a.tgt visited) then (match (path_dfs gr (List.append visited [s]) ((a.src)::acc) a.tgt t) with
+     |a::rest -> if not (List.mem a.tgt visited) then (match (path_dfs gr (s::visited) ((a.src)::acc) a.tgt t) with
                                                         |[]-> loop rest
-                                                        |_-> path_dfs gr (List.append visited [s]) ((a.src)::acc) a.tgt t)
+                                                        |_-> path_dfs gr (s::visited) ((a.src)::acc) a.tgt t)
                 else loop rest 
   in
   loop (out_arcs gr s)
