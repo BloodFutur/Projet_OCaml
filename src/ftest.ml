@@ -37,13 +37,19 @@ let () =
   (* let test2 = gmap graph (fun a -> a ^ "coucou") in *)
 
   (* Test 3: to test with graph1 *)
+  
   let test3 = gmap (add_arc (gmap graph int_of_string) 1 3 69) string_of_int in
 
-  let path_found = find_path (gmap graph int_of_string) [] 0 1 in
-  match path_found with 
-  |Some a -> print_list a; Printf.printf "%d" (min_flow (gmap graph int_of_string) max_int a)
-  |None -> Printf.printf "non";
- 
+  (*let test_path = find_path (gmap graph int_of_string) [] 0 12 in
+  match test_path with 
+  |Some a -> print_list a; Printf.printf "flow: %d" (min_flow (gmap graph int_of_string) max_int a)
+  |None -> Printf.printf "non"
+  *)
+  
+  let testff = ford_fulkerson (gmap graph int_of_string) _source _sink in
+  match testff with
+  |x ->  Printf.printf "ff: %d" x ;
+
 
   (* Rewrite the graph that has been read. *)
   let () = export outfile test3 in
