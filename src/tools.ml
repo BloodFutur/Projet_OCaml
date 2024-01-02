@@ -55,14 +55,30 @@ let min_flow gr p =
   loop max_int p
 
 
-let rec update_flows gr path flow = 
+(* let rec update_flows gr path flow = 
   match path with
   |[] -> gr
   |_::[] -> gr
   |node1::(node2::rest) -> 
     let graph1 = add_arc gr node1 node2 flow in
     let graph2 = add_arc graph1 node2 node1 (-flow) in
-    update_flows graph2 (node2::rest) flow
+    update_flows graph2 (node2::rest) flow *)
+
+    let rec update_flows grf path flow = 
+      match path with
+      |[] -> grf
+      |_::[] -> grf
+      |node1::(node2::rest) -> 
+        let graph1 = add_arc grf node1 node2 flow in
+        update_flows graph1 (node2::rest) flow
+
+    let rec update_capacities grc path flow =
+      match path with 
+      |[] -> grc
+      |_::[] -> grc
+      |node1::(node2::rest) -> 
+        let graph1 = add_arc grc node1 node2 (-flow) in
+        update_capacities graph1 (node2::rest) flow
 
 
 let max_flow_node node1 gr =
@@ -75,8 +91,7 @@ let max_flow_node node1 gr =
 
 
 
-
-let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
+(* let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
   (* initialize an identical graph with 0 flow on all arcs *)
   let gr_flow = e_fold gr_cp (fun acc a -> new_arc acc {src=a.src ;  tgt=a.tgt ;  lbl=0}) (clone_nodes gr_cp)
   in 
@@ -85,13 +100,36 @@ let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
     |None -> max_flow_node s grf (* termination condition ??*)
     |Some p -> 
       let capacity = min_flow grf p in
-      Printf.printf "capacity: %d" capacity; (*PROBLEM WITH CAPACITY*)
+      Printf.printf "capacity: %d \n" capacity; (*PROBLEM WITH CAPACITY*)
       let grf_update = update_flows grf p capacity in
       loop_paths grc grf_update
     in
-    loop_paths gr_cp gr_flow
+    loop_paths gr_cp gr_flow *)
 
 
+
+
+    (*New understanding of capacity and flow graphs
+
+    this program finishes, need to fix capacity values found and edges direction*)
+
+
+    let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
+      (* initialize an identical graph with 0 flow on all arcs *)
+      let gr_flow = e_fold gr_cp (fun acc a -> new_arc acc {src=a.src ;  tgt=a.tgt ;  lbl=0}) (clone_nodes gr_cp)
+      in 
+      (* loop on possible paths from s to t*)
+      let rec loop_paths grc grf = match find_path grc [] s t with
+        |None -> max_flow_node s grf (* termination condition ??*)
+        |Some p -> 
+          let capacity = min_flow grc p in
+          Printf.printf "capacity: %d \n" capacity; (*PROBLEM WITH CAPACITY*)
+          let grf_update = update_flows grf p capacity in
+          let grc_update = update_capacities grc p capacity in
+          loop_paths grc_update grf_update
+        in
+        loop_paths gr_cp gr_flow
+    
      
 
 
