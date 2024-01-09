@@ -50,7 +50,7 @@ let min_flow gr p =
     |node1::(node2::rest) -> 
       match find_arc gr node1 node2 with
       |None -> failwith("Edge not found")
-      |Some arc -> if (acu<arc.lbl) then loop acu rest else loop arc.lbl rest
+      |Some arc -> if (acu<arc.lbl) then loop acu (node2::rest) else loop arc.lbl (node2::rest)
   in
   loop max_int p
 
@@ -78,7 +78,8 @@ let min_flow gr p =
       |_::[] -> grc
       |node1::(node2::rest) -> 
         let graph1 = add_arc grc node1 node2 (-flow) in
-        update_capacities graph1 (node2::rest) flow
+        let graph2 = add_arc graph1 node2 node1 flow in
+        update_capacities graph2 (node2::rest) flow
 
 
 let max_flow_node node1 gr =
@@ -88,7 +89,9 @@ let max_flow_node node1 gr =
   in
   loop 0 (out_arcs gr node1)
 
-
+let rec print_path = function
+  |j::rest -> Printf.printf " %d " j ; print_path rest
+  |_-> Printf.printf "\n"
 
 
 (* let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
@@ -123,6 +126,9 @@ let max_flow_node node1 gr =
         |None -> max_flow_node s grf (* termination condition ??*)
         |Some p -> 
           let capacity = min_flow grc p in
+          
+          Printf.printf "path: ";
+          print_path p;
           Printf.printf "capacity: %d \n" capacity; (*PROBLEM WITH CAPACITY*)
           let grf_update = update_flows grf p capacity in
           let grc_update = update_capacities grc p capacity in
