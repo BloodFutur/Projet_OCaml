@@ -1,7 +1,7 @@
 .PHONY: all build format edit demo clean
 
 src?=0
-dst?=7
+dst?=1
 graph?=input_exam
 
 all: build
