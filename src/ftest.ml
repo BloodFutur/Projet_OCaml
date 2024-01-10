@@ -1,6 +1,6 @@
 open Gfile
 open Tools
-open Fulkerson
+open Gfile_exam
 
     
 let () =
@@ -29,7 +29,7 @@ let () =
   in
 
   (* Open file *)
-  let graph = from_file infile in
+  let graph = from_efile infile in
 
   (* Test 1: *)
   (* let test1 = clone_nodes graph in *)
@@ -39,21 +39,21 @@ let () =
 
   (* Test 3: to test with graph1 *)
   
-  let test3 = gmap (add_arc (gmap graph int_of_string) 1 3 69) string_of_int in
-
+(*   let test3 = gmap (add_arc (gmap graph int_of_string) 1 3 69) string_of_int in
+ *)
   (*let test_path = find_path (gmap graph int_of_string) [] 0 12 in
   match test_path with 
   |Some a -> print_list a; Printf.printf "flow: %d" (min_flow (gmap graph int_of_string) max_int a)
   |None -> Printf.printf "non"
   *)
   
-  let testff = ford_fulkerson (gmap graph int_of_string) _source _sink in
+ (*  let testff = ford_fulkerson (gmap graph int_of_string) _source _sink in
   match testff with
   |x ->  Printf.printf "ff: %d" x ;
-
+ *)
 
   (* Rewrite the graph that has been read. *)
-  let () = export outfile test3 in
+  let () = export outfile (gmap graph string_of_int) in
 
   () 
 

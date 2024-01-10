@@ -2,7 +2,7 @@
 
 src?=0
 dst?=7
-graph?=graph10.txt
+graph?=input_exam
 
 all: build
 
