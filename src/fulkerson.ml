@@ -13,7 +13,7 @@ let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
   let gr_flow = e_fold gr_cp (fun acc a -> new_arc acc {src=a.src ;  tgt=a.tgt ;  lbl=0}) (clone_nodes gr_cp)
   in 
   (* loop on possible paths from s to t*)
-  let rec loop_paths grc grf = match find_path grc [] s t with
+  let rec loop_paths grc grf = match find_path_bfs grc s t with
     |None -> max_flow_node s grf (* termination condition ??*)
     |Some p -> 
       let capacity = min_flow grc p in

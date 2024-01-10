@@ -1,8 +1,8 @@
 open Gfile
 open Tools
+open Fulkerson
 open Gfile_exam
 open Graph
-open Fulkerson
     
 let () =
 
@@ -29,6 +29,14 @@ let () =
   and _sink = int_of_string Sys.argv.(3)
   in
 
+(*
+  let graph = from_file infile in
+  let path = find_path_bfs (gmap graph int_of_string) _source _sink in
+  match path with
+  |None -> Printf.printf "oups"
+  |Some p -> print_list p;
+ *)
+
   (* Open file *)
   let graph = from_efile infile in
   Printf.printf "\nPrint graph nodes:";
@@ -52,13 +60,14 @@ let () =
   |Some a -> print_list a; Printf.printf "flow: %d" (min_flow (gmap graph int_of_string) max_int a)
   |None -> Printf.printf "non"
   *)
-  
- (*  let testff = ford_fulkerson (gmap graph int_of_string) _source _sink in
+  (*
+ let testff = ford_fulkerson (gmap graph int_of_string) _source _sink in
   match testff with
   |x ->  Printf.printf "ff: %d" x ;
- *)
-
+ 
+*)
   (* Rewrite the graph that has been read. *)
+  
   let () = export outfile (gmap graph string_of_int) in
 
   () 

@@ -5,7 +5,7 @@ type path = id list
 
 (* From a given graph, returns Some path if a path was found between s and t*)
   let find_path gr visited s t =
-    (* Deep-first search algorithm to determine a path from s to t in gr *)
+    (* Depth-first search algorithm to determine a path from s to t in gr *)
     let rec path_dfs (visited: id list) (acc: path) (s: id)=
       Printf.printf "node visited: %d \n" s;
       if s=t then 
@@ -14,9 +14,10 @@ type path = id list
       else
         let rec loop = function
         |[]->[]
-        |a::rest -> if (not (List.mem a.tgt visited)) && (a.lbl>0) then (match (path_dfs (s::visited) (a.src::acc) a.tgt) with
-                                                            |[]-> loop rest
-                                                            |p -> p)
+        |a::rest -> if (not (List.mem a.tgt visited)) && (a.lbl>0) 
+                    then (match (path_dfs (s::visited) (a.src::acc) a.tgt) with
+                          |[]-> loop rest
+                          |p -> p)
                     else loop rest 
       in
       loop (out_arcs gr s)
@@ -24,6 +25,47 @@ type path = id list
     match path_dfs visited [] s with
     |[] -> None
     |p -> Some p
+
+
+
+(* From a given graph, returns Some path if a path was found between s and t*)
+let find_path_bfs gr s t =
+  (* Breadth-first search algorithm to determine a path from s to t in gr *)
+  let q = Queue.create () in
+  Queue.push s q;
+  let visited = [] in
+  let rec path_bfs queue vis acc =
+    if (Queue.is_empty queue) then acc
+    else
+      let v = Queue.pop queue in
+      Printf.printf "\nvisited node : %d\n" v;
+      if v = t then List.rev (v::acc) 
+      else 
+        let rec loop vis = function
+        | [] -> ()
+        | a::rest -> if (not (List.mem a.tgt vis)) && (a.lbl > 0) 
+                     then begin Queue.push a.tgt queue; loop (a.tgt::vis) rest end
+                     else loop vis rest
+        in loop vis (out_arcs gr v);
+        path_bfs queue vis (v::acc)
+  in 
+    match path_bfs q visited [] with
+    |[] -> None
+    |p -> Some p
+
+
+
+
+  (*
+  let rec path_bfs visited acc s=
+    Printf.printf "node visited: %d \n" s;
+    if s=t then
+      List.rev(s::acc)
+    else
+      
+    in
+    path_bfs [s] [] s
+*)
   
   
 
