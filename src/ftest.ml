@@ -1,8 +1,7 @@
 open Gfile
 open Tools
-open Fulkerson
 open Gfile_exam
-open Graph
+open Exam
     
 let () =
 
@@ -39,12 +38,17 @@ let () =
 
   (* Open file *)
   let graph = from_efile infile in
+  let f,g = exam graph _source _sink in 
+    Printf.printf "max flow: %d" f;
+    export outfile (gmap g string_of_int);
+  (*
   Printf.printf "\nPrint graph nodes:";
   n_iter graph (fun id -> Printf.printf "%d " id);
   let mqxfloz = ford_fulkerson graph _source _sink in
   match mqxfloz with
   | f -> Printf.printf "max flow: %d" f;
 
+  *)
   (* Test 1: *)
   (* let test1 = clone_nodes graph in *)
 
@@ -67,8 +71,8 @@ let () =
  
 *)
   (* Rewrite the graph that has been read. *)
-  
+  (*
   let () = export outfile (gmap graph string_of_int) in
 
   () 
-
+  *)

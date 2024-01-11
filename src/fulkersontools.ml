@@ -27,32 +27,31 @@ type path = id list
     |p -> Some p
 
 
-
+let nbnode gr = n_fold gr (fun acc _ -> acc+1) 0
 (* From a given graph, returns Some path if a path was found between s and t*)
 let find_path_bfs gr s t =
   (* Breadth-first search algorithm to determine a path from s to t in gr *)
-  let q = Queue.create () in
-  Queue.push s q;
-  let visited = [] in
-  let rec path_bfs queue vis acc =
-    if (Queue.is_empty queue) then acc
-    else
-      let v = Queue.pop queue in
-      Printf.printf "\nvisited node : %d\n" v;
-      if v = t then List.rev (v::acc) 
-      else 
-        let rec loop vis = function
-        | [] -> ()
-        | a::rest -> if (not (List.mem a.tgt vis)) && (a.lbl > 0) 
-                     then begin Queue.push a.tgt queue; loop (a.tgt::vis) rest end
-                     else loop vis rest
-        in loop vis (out_arcs gr v);
-        path_bfs queue vis (v::acc)
-  in 
-    match path_bfs q visited [] with
-    |[] -> None
-    |p -> Some p
+  let to_explore = Queue.create() in
+  let explored = Hashtbl.create (nbnode gr) in
 
+  Queue.push s to_explore;
+  let rec loop () =
+    if Queue.is_empty to_explore then None
+    else 
+      let node = Queue.pop to_explore in
+      explored_node node 
+
+  and explored_node node =
+    if not (Hashtbl.mem explored node) then (
+      if node = t then Some (List.rev (node::(Hashtbl.find explored node)))
+      else (
+        Hashtbl.add explored node (node::(Hashtbl.find explored node));
+        let children = (out_arcs gr node)
+        in List.iter (fun arc -> Queue.push arc.tgt to_explore) children;
+        loop ()
+      ) 
+    )else loop ()
+      in loop ()
 
 
 

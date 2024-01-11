@@ -10,3 +10,5 @@ type path = id list
   @return max flow : int 
 *)
 val ford_fulkerson: int graph -> id -> id -> int
+
+val eford_fulkerson: int graph -> id -> id -> int *  int graph
