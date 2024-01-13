@@ -39,7 +39,6 @@ jobs:
       with:
         ocaml-version: ${{ matrix.ocaml-version }}
 
-    - run: sudo apt install dot
     - run: opam install dune
     - name: Build project
       run: eval $(opam env) && make build
