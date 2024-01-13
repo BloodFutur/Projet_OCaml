@@ -37,10 +37,13 @@ let () =
  *)
 
   (* Open file *)
-  let graph = from_efile infile in
-  let f,g = exam graph _source _sink in 
+  let lc, lr, lt, lp = from_efile infile in
+  let graph = make_graph lc lr lt lp in
+  let f,g, paths = exam graph _source _sink in 
     Printf.printf "max flow: %d" f;
     export outfile (gmap g string_of_int);
+  let assocs = get_assocs paths lc lr lt lp in
+  List.iter (fun (a,b,c,d) -> Printf.printf "\n%s %s %s %s" a b c d) assocs;
   (*
   Printf.printf "\nPrint graph nodes:";
   n_iter graph (fun id -> Printf.printf "%d " id);

@@ -30,12 +30,24 @@ let find_paths_crtp graph =
   | Some path -> loop_paths (decrease_flow g path) (path::lpaths)
   in loop_paths graph []
 
+let get_assocs list_paths lc lr lt lp =
+  let rec loop lassocs lc2 lr2 = function
+    | [] -> lassocs
+    | [_;c;r;t;p;_]::rest -> 
+      let ac = List.assoc c lc2 in
+      let ar = List.assoc r lr2 in
+      let at = List.assoc t lt in
+      let ap = List.assoc p lp in
+      loop ((ac,ar,at,ap)::lassocs) lc2 lr2 rest
+    | _ -> failwith "get_assocs: wrong path"
+  in loop [] (List.map (fun (id,name,_) -> (id,name)) lc) (List.map (fun (id,name,_) -> (id,name)) lr) list_paths
+
 
 let exam (gr: 'a graph) (s: id) (t: id) =
   let f,g = eford_fulkerson gr s t in
   let gs = simplify_graph g in
   let paths = find_paths_crtp gs in
   List.iter (fun p -> print_list p; Printf.printf "\n") paths;
-  f,gs
+  f,gs,paths
 
 
