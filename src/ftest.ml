@@ -7,14 +7,14 @@ open Fulkerson
 
 let exam_schedule infile outfile =
   let assocs = exam infile in
-    export_schedule outfile assocs
+  export_schedule outfile assocs
 
 let test infile source sink outfile =
   let graph = from_file infile in
   let maxflow,_ = ford_fulkerson (gmap graph int_of_string) source sink in
   match maxflow with
   | f -> Printf.printf "max flow: %d" f;
-  export outfile graph
+    export outfile graph
 
 let () =
 

@@ -10,11 +10,11 @@ open Gfile
 (* Combine arcs into a single arc between two nodes and remove arcs with label 0 *)
 let simplify_graph graph =
   let g1 = e_fold graph (fun g a -> match find_arc g a.tgt a.src with
-  | None -> g
-  | Some arc -> if arc.lbl > a.lbl
-    then add_arc (add_arc g arc.src arc.tgt (- a.lbl)) a.src a.tgt (-a.lbl)
-    else add_arc (add_arc g arc.src arc.tgt (-arc.lbl)) a.src a.tgt (-arc.lbl)
-  ) graph in
+      | None -> g
+      | Some arc -> if arc.lbl > a.lbl
+        then add_arc (add_arc g arc.src arc.tgt (- a.lbl)) a.src a.tgt (-a.lbl)
+        else add_arc (add_arc g arc.src arc.tgt (-arc.lbl)) a.src a.tgt (-arc.lbl)
+    ) graph in
   let g2 = e_fold g1 (fun g a -> if a.lbl = 0 then g else add_arc g a.src a.tgt a.lbl) (clone_nodes g1) in
   e_fold g2 (fun g a -> if a.lbl > 0 then add_arc g a.src a.tgt a.lbl else add_arc g a.tgt a.src (-a.lbl)) (clone_nodes g2)
 
@@ -26,8 +26,8 @@ let decrease_flow graph path =
 (* Return list path of all class-room-time-proctor path assignment in a given graph*)
 let find_paths_crtp graph = 
   let rec loop_paths g lpaths = match (find_path g 0 1) with
-  | None -> lpaths
-  | Some path -> loop_paths (decrease_flow g path) (path::lpaths)
+    | None -> lpaths
+    | Some path -> loop_paths (decrease_flow g path) (path::lpaths)
   in loop_paths graph []
 
 
@@ -46,7 +46,7 @@ let get_assocs list_paths lc lr lt lp =
       let ap = List.assoc p lp in
       loop ((ac,ar,at,ap)::lassocs) lc2 lr2 rest
     | _ -> failwith "get_assocs: wrong path"
-  (* map n-uplet to 2-uplet with id and name if necessary*)
+    (* map n-uplet to 2-uplet with id and name if necessary*)
   in loop [] (List.map (fun (id,name,_) -> (id,name)) lc) (List.map (fun (id,name,_) -> (id,name)) lr) list_paths
 
 
@@ -54,7 +54,7 @@ let beautiful_string_of_int n = if n = max_int then "∞" else string_of_int n
 
 let print_3tuple = function
   | (a,b,c) -> Printf.printf "(%d,%s,%d)" a b c
-  
+
 let print_2tuple = function
   | (a,b) -> Printf.printf "(%d,%s)" a b
 
@@ -81,8 +81,8 @@ let exam (infile: string) =
 
   (* Simplify graph and export it*)
   let simplified_graph = simplify_graph flow_graph in
-    export "graphs/exam_schedule/simplified.txt" (gmap simplified_graph beautiful_string_of_int);
-    
+  export "graphs/exam_schedule/simplified.txt" (gmap simplified_graph beautiful_string_of_int);
+
   (* Solution exists only if max_flow = number of classes*)
   if flow = List.length list_classes then
     (* Find associations*)
