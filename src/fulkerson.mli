@@ -11,4 +11,5 @@ type path = id list
 *)
 val ford_fulkerson: int graph -> id -> id -> int
 
+(* Ford-Fulkerson algorithm, the same as ford_fulkerson but returns the graph with the flow *)
 val eford_fulkerson: int graph -> id -> id -> int *  int graph

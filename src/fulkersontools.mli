@@ -5,9 +5,6 @@ type path = id list
 (* Return list of all paths from s to t, depth-first search *)
 val find_path: int graph -> id list -> id -> id -> path option
 
-(* Return list of all paths from s to t, breadth-first search *)
-val find_path_bfs: int graph -> id -> id -> path option
-
 (* Return flow graph with updated flows on a specified path*)
 val update_flows: int graph -> path -> int -> int graph
 

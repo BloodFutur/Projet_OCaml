@@ -3,6 +3,7 @@ open Graph
 open Tools
 open Fulkersontools
 
+(* Combine arcs into a single arc between two nodes and remove arcs with label 0 *)
 let simplify_graph graph =
   let g1 = e_fold graph (fun g a -> match find_arc g a.tgt a.src with
   | None -> g
@@ -12,6 +13,7 @@ let simplify_graph graph =
   ) graph in
   e_fold g1 (fun g a -> if a.lbl = 0 then g else add_arc g a.src a.tgt a.lbl) (clone_nodes g1)
 
+(* Remove 1 on each arc for a given path *)
 let decrease_flow graph path =
   let rec loop g p = 
     match p with 
@@ -31,6 +33,7 @@ let find_paths_crtp graph =
   in loop_paths graph []
 
 let get_assocs list_paths lc lr lt lp =
+  (* loop through all path*)
   let rec loop lassocs lc2 lr2 = function
     | [] -> lassocs
     | [_;c;r;t;p;_]::rest -> 
@@ -40,6 +43,7 @@ let get_assocs list_paths lc lr lt lp =
       let ap = List.assoc p lp in
       loop ((ac,ar,at,ap)::lassocs) lc2 lr2 rest
     | _ -> failwith "get_assocs: wrong path"
+  (* map n-uplet to 2-uplet with id and name if necessary*)
   in loop [] (List.map (fun (id,name,_) -> (id,name)) lc) (List.map (fun (id,name,_) -> (id,name)) lr) list_paths
 
 
