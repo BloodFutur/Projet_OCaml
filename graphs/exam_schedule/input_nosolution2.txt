@@ -1,0 +1,20 @@
+%%classes
+c MIC1 25 
+c MIC2 31 
+c IRB 28
+c IRA 29
+c IRB 30
+
+
+%%rooms
+r GEI15 35
+r GEI13 40
+r GEI101 25
+
+%%timeslots
+t 14h
+t 16h
+
+%%proctors
+p Patrick
+p Gerard
