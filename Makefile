@@ -4,6 +4,8 @@ src?=0
 dst?=12
 graph?=input_nosolution2.txt
 
+DOT := $(shell which dot)
+
 all: build
 
 build:
@@ -28,10 +30,13 @@ demo: build
 	./ftest.exe graphs/exam_schedule/${graph} outfile
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
+ifdef DOT
 	@dot -Tsvg graphs/exam_schedule/flow.txt > graphs/exam_schedule/flow.svg  
 	@dot -Tsvg graphs/exam_schedule/original.txt > graphs/exam_schedule/original.svg  
 	@dot -Tsvg graphs/exam_schedule/simplified.txt > graphs/exam_schedule/simplified.svg  
-
+else 
+	@echo Dot not found
+endif
 
 clean:
 	find -L . -name "*~" -delete
