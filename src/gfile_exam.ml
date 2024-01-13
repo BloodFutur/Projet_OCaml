@@ -55,13 +55,13 @@ let make_nodes list_class list_room list_time list_proctor=
 
 
 let make_graph list_class list_room list_time list_proctor = 
-  Printf.printf "class list:";
+  Printf.printf "\nclass list:";
   List.iter print_3tuple list_class;
-  Printf.printf "room list:";
+  Printf.printf "\nroom list:";
   List.iter print_3tuple list_room;
-  Printf.printf "time list:";
+  Printf.printf "\ntime list:";
   List.iter print_2tuple list_time;
-  Printf.printf "proctor list";
+  Printf.printf "\nproctor list";
   List.iter print_2tuple list_proctor;
   (*for each element in class create node, node 0 is source node 1 is sink*)
   let graph_nodes = make_nodes list_class list_room list_time list_proctor
