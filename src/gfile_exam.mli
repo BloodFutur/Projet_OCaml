@@ -7,3 +7,5 @@ type path = string
 val make_graph: (int * string * int) list -> (int * string * int) list -> (int * string) list -> (int * string) list -> int graph
 
 val from_efile: path -> (int * string * int) list * (int * string * int) list * (int * string) list * (int * string) list
+
+val export_schedule: path -> (string * string * string * string) list option -> unit

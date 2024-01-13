@@ -34,12 +34,6 @@ let read_comment line =
     Printf.printf "Unknown line:\n%s\n%!" line ;
     failwith "from_file"
 
-let print_3tuple = function
-  | (a,b,c) -> Printf.printf "(%d,%s,%d)" a b c
-  
-
-let print_2tuple = function
-  | (a,b) -> Printf.printf "(%d,%s)" a b
 
 let make_nodes list_class list_room list_time list_proctor= 
   (*for each element in class create node, node 0 is source node 1 is sink*)
@@ -55,14 +49,6 @@ let make_nodes list_class list_room list_time list_proctor=
 
 
 let make_graph list_class list_room list_time list_proctor = 
-  Printf.printf "\nclass list:";
-  List.iter print_3tuple list_class;
-  Printf.printf "\nroom list:";
-  List.iter print_3tuple list_room;
-  Printf.printf "\ntime list:";
-  List.iter print_2tuple list_time;
-  Printf.printf "\nproctor list";
-  List.iter print_2tuple list_proctor;
   (*for each element in class create node, node 0 is source node 1 is sink*)
   let graph_nodes = make_nodes list_class list_room list_time list_proctor
   in
@@ -105,3 +91,14 @@ let from_efile path =
     close_in infile;
     final_graph
      
+
+let export_schedule path assocs =
+  let ff = open_out path in
+  Printf.fprintf ff "Exam schedule:\n\n";
+  match assocs with
+  | None -> Printf.fprintf ff "No possible schedule :( \n"
+  | Some ass -> 
+    Printf.fprintf ff "";
+    List.iter (fun (a,b,c,d) -> Printf.fprintf ff "Class %s goes in room %s at %s with %s.\n" a b c d) ass;
+  close_out ff ;
+  ()

@@ -1,12 +1,25 @@
 open Gfile
-open Tools
-open Gfile_exam
+open Gfile_exam 
 open Exam
-    
+open Tools
+
+open Fulkerson
+
+let exam_schedule infile outfile =
+  let assocs = exam infile in
+    export_schedule outfile assocs
+
+let test infile source sink outfile =
+  let graph = from_file infile in
+  let maxflow,_ = ford_fulkerson (gmap graph int_of_string) source sink in
+  match maxflow with
+  | f -> Printf.printf "max flow: %d" f;
+  export outfile graph
+
 let () =
 
   (* Check the number of command-line arguments *)
-  if Array.length Sys.argv <> 5 then
+  if Array.length Sys.argv <> 5 && Array.length Sys.argv <> 3 then
     begin
       Printf.printf
         "\n ✻  Usage: %s infile source sink outfile\n\n%s%!" Sys.argv.(0)
@@ -17,65 +30,20 @@ let () =
       exit 0
     end ;
 
+  if Array.length Sys.argv = 5 then
+    begin
+      let _infile = Sys.argv.(1)
+      and _outfile = Sys.argv.(4)
+      and _source = int_of_string Sys.argv.(2)
+      and _sink = int_of_string Sys.argv.(3)
+      in
 
-  (* Arguments are : infile(1) source-id(2) sink-id(3) outfile(4) *)
-  
-  let infile = Sys.argv.(1)
-  and outfile = Sys.argv.(4)
-  
-  (* These command-line arguments are not used for the moment. *)
-  and _source = int_of_string Sys.argv.(2)
-  and _sink = int_of_string Sys.argv.(3)
-  in
-
-(*
-  let graph = from_file infile in
-  let path = find_path_bfs (gmap graph int_of_string) _source _sink in
-  match path with
-  |None -> Printf.printf "oups"
-  |Some p -> print_list p;
- *)
-
-  (* Open file *)
-  let lc, lr, lt, lp = from_efile infile in
-  let graph = make_graph lc lr lt lp in
-  let f,g, paths = exam graph _source _sink in 
-    Printf.printf "max flow: %d" f;
-    export outfile (gmap g string_of_int);
-  let assocs = get_assocs paths lc lr lt lp in
-  List.iter (fun (a,b,c,d) -> Printf.printf "\n%s %s %s %s" a b c d) assocs;
-  (*
-  Printf.printf "\nPrint graph nodes:";
-  n_iter graph (fun id -> Printf.printf "%d " id);
-  let mqxfloz = ford_fulkerson graph _source _sink in
-  match mqxfloz with
-  | f -> Printf.printf "max flow: %d" f;
-
-  *)
-  (* Test 1: *)
-  (* let test1 = clone_nodes graph in *)
-
-  (* Test 2: *)
-  (* let test2 = gmap graph (fun a -> a ^ "coucou") in *)
-
-  (* Test 3: to test with graph1 *)
-  
-(*   let test3 = gmap (add_arc (gmap graph int_of_string) 1 3 69) string_of_int in
- *)
-  (*let test_path = find_path (gmap graph int_of_string) [] 0 12 in
-  match test_path with 
-  |Some a -> print_list a; Printf.printf "flow: %d" (min_flow (gmap graph int_of_string) max_int a)
-  |None -> Printf.printf "non"
-  *)
-  (*
- let testff = ford_fulkerson (gmap graph int_of_string) _source _sink in
-  match testff with
-  |x ->  Printf.printf "ff: %d" x ;
- 
-*)
-  (* Rewrite the graph that has been read. *)
-  (*
-  let () = export outfile (gmap graph string_of_int) in
-
-  () 
-  *)
+      test _infile _source _sink _outfile;
+    end
+  else
+    begin (* Array.length Sys.argv = 3 *)
+      let _infile = Sys.argv.(1)
+      and _outfile = Sys.argv.(2)
+      in
+      exam_schedule _infile _outfile;
+    end

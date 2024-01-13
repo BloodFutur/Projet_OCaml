@@ -1,8 +1,8 @@
 .PHONY: all build format edit demo clean
 
 src?=0
-dst?=1
-graph?=input_exam
+dst?=12
+graph?=input_nosolution2.txt
 
 all: build
 
@@ -17,11 +17,21 @@ format:
 edit:
 	code . -n
 
-demo: build
+test: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/${graph} $(src) $(dst) outfile
+	./ftest.exe graphs/test/${graph} $(src) $(dst) outfile
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
+
+demo: build
+	@echo "\n   ⚡  EXECUTING  ⚡\n"
+	./ftest.exe graphs/exam_schedule/${graph} outfile
+	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
+	@cat outfile
+	@dot -Tsvg graphs/exam_schedule/flow.txt > graphs/exam_schedule/flow.svg  
+	@dot -Tsvg graphs/exam_schedule/original.txt > graphs/exam_schedule/original.svg  
+	@dot -Tsvg graphs/exam_schedule/simplified.txt > graphs/exam_schedule/simplified.svg  
+
 
 clean:
 	find -L . -name "*~" -delete

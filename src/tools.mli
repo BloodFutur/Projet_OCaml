@@ -1,6 +1,5 @@
 open Graph
 
-
 (* Return a new graph having the same nodes than gr, but not arc*)
 val clone_nodes: 'a graph -> 'b graph
 
@@ -13,4 +12,5 @@ val add_arc: int graph -> id -> id -> int -> int graph
 (* Print each element of an int list*)
 val print_list: int list -> unit 
 
-
+(* Convert a list of nodes into a list of arcs*)
+val arcs_from_nodes: int graph -> id list -> int arc list

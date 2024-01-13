@@ -12,7 +12,16 @@ let add_arc (gr: 'a graph) (id1: id) (id2: id) (n: int) =  match (find_arc gr id
   |Some arc -> new_arc gr {arc with lbl=(arc.lbl + n)}
 
 let rec print_list = function 
-[] -> ()
+| [] -> ()
 | e::l -> print_int e ; print_string " " ; print_list l
 
 
+let arcs_from_nodes gr nlist =
+  let rec loop alist = function
+  | [] -> alist
+  | _::[] -> alist
+  | n1::n2::tl -> 
+    match find_arc gr n1 n2 with
+    | None -> loop ({src=n1;tgt=n2;lbl=0}::alist) (n2::tl) (* If the arc does not exist, we create it with a weight of 0 *)
+    | Some arc -> loop (arc::alist) (n2::tl)
+  in loop [] nlist
