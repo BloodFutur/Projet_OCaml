@@ -25,6 +25,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - run: apt-get update
     - name: Try to restore opam cache
       if: runner.os != 'Windows'
       id: opam-cache
