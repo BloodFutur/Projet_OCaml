@@ -14,7 +14,7 @@ let ford_fulkerson (gr_cp: 'a graph) (s: id) (t: id) =
   in 
   (* loop on possible paths from s to t*)
   let rec loop_paths grc grf = match find_path grc s t with
-    |None -> (max_flow_node s grf, grf) (* termination condition *)
+    |None -> (max_flow_node s grf, grf) (* termination condition: return flow + flow graph *)
     |Some p -> 
       (* find the minimum possible flow on a given path *)
       let capacity = min_flow grc p in

@@ -36,8 +36,6 @@ let min_flow gr p =
 
 (* Add flow alongside a path in a given flow graph *)
 let update_flows grf path flow = 
-  (* List.iter (fun a -> Printf.printf "arc: %d %d \n" a.src a.tgt) (arcs_from_nodes grf path);
-     print_list path; *)
   List.fold_left (fun acu a -> add_arc acu a.src a.tgt flow) grf (arcs_from_nodes grf path)
 
 (* match path with

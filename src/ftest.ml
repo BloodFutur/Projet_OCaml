@@ -1,25 +1,11 @@
-open Gfile
-open Gfile_exam 
-open Exam
 open Tools
-
 open Fulkerson
-
-let exam_schedule infile outfile =
-  let assocs = exam infile in
-  export_schedule outfile assocs
-
-let test infile source sink outfile =
-  let graph = from_file infile in
-  let maxflow,_ = ford_fulkerson (gmap graph int_of_string) source sink in
-  match maxflow with
-  | f -> Printf.printf "max flow: %d" f;
-    export outfile graph
+open Gfile
 
 let () =
 
   (* Check the number of command-line arguments *)
-  if Array.length Sys.argv <> 5 && Array.length Sys.argv <> 3 then
+  if Array.length Sys.argv <> 5 then
     begin
       Printf.printf
         "\n ✻  Usage: %s infile source sink outfile\n\n%s%!" Sys.argv.(0)
@@ -30,20 +16,21 @@ let () =
       exit 0
     end ;
 
-  if Array.length Sys.argv = 5 then
-    begin
-      let _infile = Sys.argv.(1)
-      and _outfile = Sys.argv.(4)
-      and _source = int_of_string Sys.argv.(2)
-      and _sink = int_of_string Sys.argv.(3)
-      in
+  (* Arguments are : infile(1) source-id(2) sink-id(3) outfile(4) *)
 
-      test _infile _source _sink _outfile;
-    end
-  else
-    begin (* Array.length Sys.argv = 3 *)
-      let _infile = Sys.argv.(1)
-      and _outfile = Sys.argv.(2)
-      in
-      exam_schedule _infile _outfile;
-    end
+  let infile = Sys.argv.(1)
+  and outfile = Sys.argv.(4)
+  and _source = int_of_string Sys.argv.(2)
+  and _sink = int_of_string Sys.argv.(3)
+  in
+
+  (* Open file *)
+  let graph = from_file infile in
+  let maxflow,gflow = ford_fulkerson (gmap graph int_of_string) _source _sink in
+  match maxflow with
+  | f -> Printf.printf "max flow: %d" f;
+
+  (* Rewrite the graph that has been read. *)
+  let () = export outfile (gmap gflow string_of_int) in
+
+  ()

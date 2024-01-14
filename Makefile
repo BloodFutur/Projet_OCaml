@@ -19,26 +19,37 @@ format:
 edit:
 	code . -n
 
-test: build
+demo: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/test/${graph} $(src) $(dst) outfile
+	./ftest.exe graphs/${graph} $(src) $(dst) outfile
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
 
-demo: build
+schedule:
+	@echo "\n   🚨  COMPILING  🚨 \n"
+	dune build src/scheduletest.exe
+	ls src/*.exe > /dev/null && ln -fs src/*.exe .
+
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/exam_schedule/${graph} outfile
+	./scheduletest.exe exam_schedule/inputs/${graph} outfile
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
 ifdef DOT
-	@dot -Tsvg graphs/exam_schedule/flow.txt > graphs/exam_schedule/flow.svg  
-	@dot -Tsvg graphs/exam_schedule/original.txt > graphs/exam_schedule/original.svg  
-	@dot -Tsvg graphs/exam_schedule/simplified.txt > graphs/exam_schedule/simplified.svg  
+	@dot -Tsvg exam_schedule/output/flow.txt > exam_schedule/output/flow.svg  
+	@dot -Tsvg exam_schedule/output/original.txt > exam_schedule/output/original.svg  
+	@dot -Tsvg exam_schedule/output/simplified.txt > exam_schedule/output/simplified.svg  
 else 
 	@echo Dot not found
 endif
 
+svg: demo
+	@echo "\n   ⚡  SVG  ⚡\n"
+	dot -Tsvg outfile > graphs/output.svg
+
 clean:
 	find -L . -name "*~" -delete
 	rm -f *.exe
+	rm -f exam_schedule/output/*.svg
+	rm -f exam_schedule/output/*.csv
+	rm -f graphs/*.svg
 	dune clean

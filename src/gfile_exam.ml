@@ -3,31 +3,35 @@ open Graph
 type path = string
 
 
+(*read class line from file and returns a tuple of class info: (id, name, number of students)*)
 let read_class line counter =
   try Scanf.sscanf line "c %s %d" (fun s d -> (counter, s, d))
   with e ->
     Printf.printf "Cannot read class in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
+(*read room line from file and returns a tuple of room info: (id, name, capacity)*)
 let read_room line counter = 
   try Scanf.sscanf line "r %s %d" (fun s d -> (counter, s, d))
   with e ->
     Printf.printf "Cannot read room in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
+(*read time line from file and returns a tuple of time info: (id, time)*)
 let read_time line counter =
   try Scanf.sscanf line "t %s" (fun s -> (counter, s))
   with e ->
     Printf.printf "Cannot read time in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
+(*read proctor from file and returns a tuple of proctor info: (id, name)*)
 let read_proctor line counter =
   try Scanf.sscanf line "p %s" (fun s -> (counter, s))
   with e ->
     Printf.printf "Cannot read proctor in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
-
+(*read comment line from file and returns unit*)
 let read_comment line =
   try Scanf.sscanf line " %%" ()
   with _ ->
@@ -71,6 +75,7 @@ let make_graph list_class list_room list_time list_proctor =
 let from_efile path = 
   let infile = open_in path in 
 
+  (*read file line by line and create list of tuples (class, room, time, proctor) and return it*)
   let rec loop counter list_class list_room list_time list_proctor =
     try 
       let line = input_line infile in

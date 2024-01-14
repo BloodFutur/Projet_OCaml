@@ -1,3 +1,3 @@
 
-(* Apply ford-fulkerson algorithm to a given graph and return max flow, flow graph and paths list*)
+(* Solve exam scheduling and return (class,room,time,proctor) associations if it exists*)
 val exam: string -> (string * string * string * string) list option

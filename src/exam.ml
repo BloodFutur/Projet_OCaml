@@ -3,19 +3,20 @@ open Graph
 open Tools
 open Fulkersontools
 open Gfile_exam
-
-
 open Gfile
 
 (* Combine arcs into a single arc between two nodes and remove arcs with label 0 *)
 let simplify_graph graph =
+  (* Combine arcs *)
   let g1 = e_fold graph (fun g a -> match find_arc g a.tgt a.src with
       | None -> g
       | Some arc -> if arc.lbl > a.lbl
         then add_arc (add_arc g arc.src arc.tgt (- a.lbl)) a.src a.tgt (-a.lbl)
         else add_arc (add_arc g arc.src arc.tgt (-arc.lbl)) a.src a.tgt (-arc.lbl)
     ) graph in
+  (* Remove arcs with value 0*)
   let g2 = e_fold g1 (fun g a -> if a.lbl = 0 then g else add_arc g a.src a.tgt a.lbl) (clone_nodes g1) in
+  (* If arcs has negative value then change the arc to the other way *)
   e_fold g2 (fun g a -> if a.lbl > 0 then add_arc g a.src a.tgt a.lbl else add_arc g a.tgt a.src (-a.lbl)) (clone_nodes g2)
 
 
@@ -50,11 +51,20 @@ let get_assocs list_paths lc lr lt lp =
   in loop [] (List.map (fun (id,name,_) -> (id,name)) lc) (List.map (fun (id,name,_) -> (id,name)) lr) list_paths
 
 
+(* Same as string of int but prints ∞ if int is max_int*)
 let beautiful_string_of_int n = if n = max_int then "∞" else string_of_int n
 
+(* 
+  Print 3 - tuple 
+  Example: (1, "MIC1", 2) -> "(1,MIC1,2)"
+*)
 let print_3tuple = function
   | (a,b,c) -> Printf.printf "(%d,%s,%d)" a b c
 
+(*
+  Print 2 - tuple
+  Example: (1, "Patrick") -> "(1,Patrick)"
+*)
 let print_2tuple = function
   | (a,b) -> Printf.printf "(%d,%s)" a b
 
@@ -70,18 +80,18 @@ let exam (infile: string) =
 
   (* Make graph from lists and export it*)
   let graph = make_graph list_classes list_rooms list_times list_proctors in
-  export "graphs/exam_schedule/original.txt" (gmap graph beautiful_string_of_int);
+  export "exam_schedule/output/original.txt" (gmap graph beautiful_string_of_int);
 
   (* Compute Ford-Fulkson algorithm to get maximum flow*)
   let flow, flow_graph = ford_fulkerson graph 0 1 in
   Printf.printf "\n\nMaximum flow = %d\n" flow;
 
   (* Export flow graph*)
-  export "graphs/exam_schedule/flow.txt" (gmap flow_graph beautiful_string_of_int);
+  export "exam_schedule/output/flow.txt" (gmap flow_graph beautiful_string_of_int);
 
   (* Simplify graph and export it*)
   let simplified_graph = simplify_graph flow_graph in
-  export "graphs/exam_schedule/simplified.txt" (gmap simplified_graph beautiful_string_of_int);
+  export "exam_schedule/output/simplified.txt" (gmap simplified_graph beautiful_string_of_int);
 
   (* Solution exists only if max_flow = number of classes*)
   if flow = List.length list_classes then
@@ -90,6 +100,6 @@ let exam (infile: string) =
     let assocs = get_assocs paths list_classes list_rooms list_times list_proctors in
     Some assocs
   else
-    None
+    None (* No solution *)
 
 
