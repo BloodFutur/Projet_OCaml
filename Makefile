@@ -2,7 +2,7 @@
 
 src?=0
 dst?=12
-graph?=graph.txt
+graph?=graph2.txt
 
 DOT := $(shell which dot)
 
